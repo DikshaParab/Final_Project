@@ -4,144 +4,227 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="/static/admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #212529;
+            padding: 1rem;
+            color: #fff;
+        }
+        .brand-logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #ffc107;
+        }
+        .logout-btn a {
+            color: #212529;
+            text-decoration: none;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            height: 100vh;
+            position: fixed;
+            top: 56px;
+            left: 0;
+            padding: 1rem;
+            color: #fff;
+        }
+        .sidebar a {
+            display: block;
+            color: #adb5bd;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #495057;
+            color: #ffc107;
+        }
+        .main-content {
+            margin-left: 270px;
+            padding: 2rem;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .stat-card h3 {
+            font-size: 1.2rem;
+            color: #343a40;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        .stat-change {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        .activity-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .modal-content {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        .table {
+            margin-top: 1rem;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="navbar-brand">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
             <div class="brand-logo">EMS</div>
-            <span class="brand-name">Employee Management System</span>
-        </div>
-       
-        <div class="user-menu">
-            <button class="logout-btn">
-                <a href="/logout">
-                    <span><i class="fas fa-sign-out-alt"></i></span>
-                    <span>Logout</span>
-                </a>
-            </button>
+            <span class="ms-3">Employee Management System</span>
+            <div class="ms-auto">
+                <button class="btn btn-warning">
+                    <a href="/logout">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </button>
+            </div>
         </div>
     </nav>
 
-    <main class="container">
-        <div class="grid-container">
-            <!-- Statistics Cards -->
-            <div class="card stat-card">
-                <h3>Total Employees</h3>
-                <div class="stat-value">125</div>
-                <div class="stat-change">+5 this month</div>
-            </div>
+    <div class="sidebar">
+        <a href="#dashboard" class="active">Dashboard</a>
+        <a href="#attendance">Attendance</a>
+        <a href="#leaves">Leave Requests</a>
+        <a href="#activity">Activity Logs</a>
+    </div>
 
-            <div class="card stat-card">
-                <h3>Present Today</h3>
-                <div class="stat-value">98</div>
-                <div class="stat-change">85% attendance</div>
-            </div>
-
-            <div class="card stat-card">
-                <h3>Pending Leaves</h3>
-                <div class="stat-value">12</div>
-                <div class="stat-change">3 new today</div>
-            </div>
-
-            <div class="card stat-card">
-                <h3>Active Projects</h3>
-                <div class="stat-value">8</div>
-                <div class="stat-change">2 nearing deadline</div>
-            </div>
-
-            <!-- Recent Activities -->
-            <div class="card">
-                <h2>Recent Activities</h2>
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-time">10:30 AM</div>
-                        <div class="activity-content">John Doe applied for leave from 15th to 18th June</div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-time">9:15 AM</div>
-                        <div class="activity-content">Jane Smith marked attendance (Late - 9:15 AM)</div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-time">Yesterday</div>
-                        <div class="activity-content">New employee Michael Brown joined the team</div>
-                    </div>
+    <main class="main-content">
+        <div id="dashboard" class="section">
+            <div class="card-grid">
+                <div class="card stat-card">
+                    <h3>Total Employees</h3>
+                    <div class="stat-value">125</div>
+                    <div class="stat-change">+5 this month</div>
+                </div>
+                <div class="card stat-card">
+                    <h3>Present Today</h3>
+                    <div class="stat-value">98</div>
+                    <div class="stat-change">85% attendance</div>
+                </div>
+                <div class="card stat-card">
+                    <h3>Pending Leaves</h3>
+                    <div class="stat-value">12</div>
+                    <div class="stat-change">3 new today</div>
+                </div>
+                <div class="card stat-card">
+                    <h3>Active Projects</h3>
+                    <div class="stat-value">8</div>
+                    <div class="stat-change">2 nearing deadline</div>
                 </div>
             </div>
 
-            <!-- Calendar -->
-            <div class="card">
-                <h2>Company Calendar</h2>
+            <div class="card mt-4 section" id="calendar">
+                <h2>Employee Attendance Calendar</h2>
                 <div id="calendar"></div>
             </div>
+        </div>
 
-            <!-- Pending Leave Requests -->
-            <div class="card">
-                <h2>Pending Leave Requests</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Employee</th>
-                            <th>Leave Period</th>
-                            <th>Reason</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>John Doe</td>
-                            <td>15 Jun - 18 Jun 2023</td>
-                            <td>Family vacation</td>
-                            <td>
-                                <button class="btn btn-primary">Approve</button>
-                                <button class="btn btn-danger">Reject</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Jane Smith</td>
-                            <td>20 Jun - 22 Jun 2023</td>
-                            <td>Medical appointment</td>
-                            <td>
-                                <button class="btn btn-primary">Approve</button>
-                                <button class="btn btn-danger">Reject</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="card mt-4 section" id="activity">
+            <h2>Recent Activities</h2>
+            <div class="activity-item">
+                <strong>10:30 AM:</strong> John Doe applied for leave from 15th to 18th June
             </div>
+            <div class="activity-item">
+                <strong>9:15 AM:</strong> Jane Smith marked attendance (Late - 9:15 AM)
+            </div>
+            <div class="activity-item">
+                <strong>Yesterday:</strong> New employee Michael Brown joined the team
+            </div>
+        </div>
+
+        <div class="card mt-4 section" id="leaves">
+            <h2>Pending Leave Requests</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Leave Period</th>
+                        <th>Reason</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>15 Jun - 18 Jun 2023</td>
+                        <td>Family vacation</td>
+                        <td>
+                            <button class="btn btn-success btn-sm">Approve</button>
+                            <button class="btn btn-danger btn-sm">Reject</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jane Smith</td>
+                        <td>20 Jun - 22 Jun 2023</td>
+                        <td>Medical appointment</td>
+                        <td>
+                            <button class="btn btn-success btn-sm">Approve</button>
+                            <button class="btn btn-danger btn-sm">Reject</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </main>
 
-    <!-- Leave Approval Modal -->
-    <div id="approvalModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Leave Request Details</h3>
-                <span class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <p><strong>Employee:</strong> <span id="modalEmployeeName"></span></p>
-                <p><strong>Leave Period:</strong> <span id="modalLeavePeriod"></span></p>
-                <p><strong>Reason:</strong> <span id="modalLeaveReason"></span></p>
-                <p><strong>Status:</strong> <span id="modalLeaveStatus"></span></p>
-                <div class="form-group">
-                    <label for="approvalComment">Comments (Optional)</label>
-                    <textarea id="approvalComment" class="form-control" rows="3"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="approveBtn" class="btn btn-primary">Approve</button>
-                <button id="rejectBtn" class="btn btn-danger">Reject</button>
-                <button id="cancelBtn" class="btn">Cancel</button>
-            </div>
-        </div>
-    </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-    <script src="/static/admin.js"></script>
+    <script>
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.section').forEach(section => section.style.display = 'none');
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.style.display = 'block';
+            });
+        });
+
+        // Show dashboard by default
+        document.querySelectorAll('.section').forEach(section => section.style.display = 'none');
+        document.querySelector('#dashboard').style.display = 'block';
+
+        // Calendar Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            if (calendarEl) {
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    events: [
+                        { title: 'Present', date: '2025-07-28', color: '#198754' },
+                        { title: 'On Leave', date: '2025-07-26', color: '#ffc107' },
+                        { title: 'Absent', date: '2025-07-25', color: '#dc3545' }
+                    ]
+                });
+                calendar.render();
+            }
+        });
+    </script>
 </body>
 </html>
