@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Leave History</title>
+        <link rel="stylesheet" href="/static/employee.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </head>
+    <body>
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <div class="brand-logo">EMS</div>
+                <span class="brand-name">Employee Management System</span>
+            </div> 
+            <div class="user-menu">
+                <button class="logout-btn">
+                    <a href="/logout">
+                        <span><i class="fas fa-sign-out-alt"></i></span>
+                        <span>Logout</span>
+                    </a>
+                </button>
+            </div>
+        </nav>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item" id="dashboard">
+                    <a href="/employee/dashboard?employee_id={{ employee.id }}">
+                        <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item" id="attendance">
+                    <a href="/employee/attendance?employee_id={{ employee.id }}">
+                        <span class="icon"><i class="fas fa-calendar-check"></i></span>
+                        <span>Attendance</span>
+                    </a>
+                </li>
+                <li class="menu-item active" id="leaves">
+                    <a href="/employee/leaves?employee_id={{ employee.id }}">
+                        <span class="icon"><i class="fas fa-plane-departure"></i></span>
+                        <span>Leaves History</span>
+                    </a>
+                </li>
+                <li class="menu-item" id="apply-leave">
+                    <a href="/employee/apply-leave?employee_id={{ employee.id }}">
+                        <span class="icon"><i class="fa-solid fa-file-signature"></i></span>
+                        <span>Apply Leave</span>
+                    </a>
+                </li>
+                <li class="menu-item" id="profile">
+                    <a href="/employee/profile?employee_id={{ employee.id }}">
+                        <span class="icon"><i class="fas fa-user"></i></span>
+                        <span>Profile</span>
+                    </a>
+                </li>
+
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboardContent">
+                <div class="page-header">
+                    <div class="header-content">
+                        <h2 class="page-title">Leave History</h2>
+                    </div>
+                    <button class="logout-btn">
+                        <a href="/employee/apply-leave?employee_id={{ employee.id }}">
+                            <span class="icon"><i class="fas fa-plane-departure"></i></span>
+                            <span>Apply Leave</span>
+                        </a>
+                    </button>
+                </div>
+                    
+                <div class="card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Leave Period</th>
+                                <th>Days</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for leave in leaves %}
+                            <tr>
+                                <td>{{ leave.start_date }} to {{ leave.end_date }}</td>
+                                <td>{{ (leave.end_date - leave.start_date).days + 1 }}</td>
+                                <td>{{ leave.reason }}</td>
+                                <td class="status-{{ leave.status }}">{{ leave.status|title }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

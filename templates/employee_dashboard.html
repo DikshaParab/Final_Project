@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <link rel ="stylesheet" href="{{ url_for('static', path='/employee.css') }}">
+    <!-- <link rel="stylesheet" href="/static/employee.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="brand-logo">EMS</div>
+            <span class="brand-name">Employee Management System</span>
+        </div>
+       
+        <div class="user-menu">
+            <button class="logout-btn">
+                <a href="/logout">
+                    <span><i class="fa-solid fa-sign-out-alt"></i></span>
+                    <span>Logout</span>
+                </a>
+            </button>
+        </div>
+    </nav>
+
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="menu-item active" id="dashboard">
+                <a href="/employee/dashboard?employee_id={{ employee.id }}">
+                    <span class="icon"><i class="fa-solid fa-tachometer-alt"></i></span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="menu-item" id="attendance">
+                <a href="/employee/attendance?employee_id={{ employee.id }}">
+                    <span class="icon"><i class="fa-solid fa-calendar-check"></i></span>
+                    <span>Attendance</span>
+                </a>
+            </li>
+            <li class="menu-item" id="leaves">
+                <a href="/employee/leaves?employee_id={{ employee.id }}">
+                    <span class="icon"><i class="fa-solid fa-plane-departure"></i></span>
+                    <span>Leaves History</span>
+                </a>
+            </li>
+            <li class="menu-item" id="apply-leave">
+                <a href="/employee/apply-leave?employee_id={{ employee.id }}">
+                    <span class="icon"><i class="fa-solid fa-file-signature"></i></span>
+                    <span>Apply Leave</span>
+                </a>
+            </li>
+            <li class="menu-item" id="profile">
+                <a href="/employee/profile?employee_id={{ employee.id }}">
+                    <span class="icon"><i class="fa-solid fa-user"></i></span>
+                    <span>Profile</span>
+                </a>
+            </li>
+
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="dashboardContent">
+            <div class="page-header">
+                <div class="header-content">
+                    <h2 class="page-title">Employee Dashboard</h2>
+                </div>
+            </div>
+        </div>
+        <div class="card-grid">
+            <!-- Quick Stats -->
+            <div class="card">
+                <h3>Days Present</h3>
+                <div class="stat-value">{{ attendance|length }}</div>
+                <div class="stat-change">This month</div>
+            </div>
+
+            <div class="card">
+                <h3>Leave Balance</h3>
+                <div class="stat-value">12</div>
+                <div class="stat-change">Days remaining</div>
+            </div>
+
+            <div class="card">
+                <h3>Pending Leaves</h3>
+                <div class="stat-value">{{ leaves|selectattr('status', 'equalto', 'pending')|list|length }}</div>
+                <div class="stat-change">Requests</div>
+            </div>
+        </div>
+            <!-- Attendance Calendar -->
+        <div class="card-grid">
+            <div class="card">
+                <h4>Attendance, Time & Leave</h4>
+                <div id="attendanceCalendar"></div>
+                <div class="calendar-legend">
+                  <span><span class="dot" style="background:#10b981;"></span>Present</span>
+                  <span><span class="dot" style="background:#ef4444;"></span>Absent</span>
+                  <span><span class="dot" style="background:#f59e42;"></span>Leave</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="/static/employee.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('attendanceCalendar');
+        // Safely handle attendance events
+        let events = [];
+        try {
+            events = JSON.parse('{{ attendance_events | tojson | safe }}');
+        } catch (e) {
+            console.error("Error parsing attendance events:", e);
+        }
+        // Example: If your backend provides type info, set color accordingly
+        // Otherwise, you can map event titles to colors here
+        events = events.map(ev => {
+            if (ev.title && !ev.color) {
+                if (ev.title.toLowerCase() === 'present') ev.color = '#10b981';
+                else if (ev.title.toLowerCase() === 'absent') ev.color = '#ef4444';
+                else if (ev.title.toLowerCase() === 'leave') ev.color = '#f59e42';
+            }
+            return ev;
+        });
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: events,
+            eventDisplay: 'block',
+            eventColor: '#10b981', // fallback
+            height: 421
+        });
+        calendar.render();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <link rel="stylesheet" href="/static/login.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="form-container">
+    <div class="icon-lock"><i class="fas fa-lock"></i></div>
+    <h2>User Login</h2>
+    <form action="/login" method="POST" autocomplete="off">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="password">Password</label>
+      <div style="position:relative;">
+        <input type="password" id="password" name="password" required />
+      </div>
+      <button type="submit">Login</button>
+
+      <div class="punch-row">
+        <button type="button" onclick="submitPunch('punch-in')">Punch In</button>
+        <button type="button" onclick="submitPunch('punch-out')">Punch Out</button>
+      </div>
+    </form>
+    <script>
+      function submitPunch(type) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = type === 'punch-in' ? '/punch-in' : '/punch-out';
+        // Add email field
+        const email = document.getElementById('email').value;
+        const emailInput = document.createElement('input');
+        emailInput.type = 'hidden';
+        emailInput.name = 'email';
+        emailInput.value = email;
+        form.appendChild(emailInput);
+        document.body.appendChild(form);
+        form.submit();
+      }
+    </script>
+    </form>
+    <p class="register-prompt">
+      Don’t have an account? <a href="/register">Register here</a>
+    </p>
+  </div>
+
+</body>
+</html>

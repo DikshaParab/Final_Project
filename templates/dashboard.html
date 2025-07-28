@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="brand-logo">EMS</div>
+            <span class="brand-name">Employee Management System</span>
+        </div>
+       
+        <div class="user-menu">
+            <button class="logout-btn">
+                <a href="/logout">
+                    <span><i class="fas fa-sign-out-alt"></i></span>
+                    <span>Logout</span>
+                </a>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="grid-container">
+            <!-- Statistics Cards -->
+            <div class="card stat-card">
+                <h3>Total Employees</h3>
+                <div class="stat-value">125</div>
+                <div class="stat-change">+5 this month</div>
+            </div>
+
+            <div class="card stat-card">
+                <h3>Present Today</h3>
+                <div class="stat-value">98</div>
+                <div class="stat-change">85% attendance</div>
+            </div>
+
+            <div class="card stat-card">
+                <h3>Pending Leaves</h3>
+                <div class="stat-value">12</div>
+                <div class="stat-change">3 new today</div>
+            </div>
+
+            <div class="card stat-card">
+                <h3>Active Projects</h3>
+                <div class="stat-value">8</div>
+                <div class="stat-change">2 nearing deadline</div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="card">
+                <h2>Recent Activities</h2>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-time">10:30 AM</div>
+                        <div class="activity-content">John Doe applied for leave from 15th to 18th June</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">9:15 AM</div>
+                        <div class="activity-content">Jane Smith marked attendance (Late - 9:15 AM)</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-time">Yesterday</div>
+                        <div class="activity-content">New employee Michael Brown joined the team</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar -->
+            <div class="card">
+                <h2>Company Calendar</h2>
+                <div id="calendar"></div>
+            </div>
+
+            <!-- Pending Leave Requests -->
+            <div class="card">
+                <h2>Pending Leave Requests</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Leave Period</th>
+                            <th>Reason</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John Doe</td>
+                            <td>15 Jun - 18 Jun 2023</td>
+                            <td>Family vacation</td>
+                            <td>
+                                <button class="btn btn-primary">Approve</button>
+                                <button class="btn btn-danger">Reject</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jane Smith</td>
+                            <td>20 Jun - 22 Jun 2023</td>
+                            <td>Medical appointment</td>
+                            <td>
+                                <button class="btn btn-primary">Approve</button>
+                                <button class="btn btn-danger">Reject</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Leave Approval Modal -->
+    <div id="approvalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Leave Request Details</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p><strong>Employee:</strong> <span id="modalEmployeeName"></span></p>
+                <p><strong>Leave Period:</strong> <span id="modalLeavePeriod"></span></p>
+                <p><strong>Reason:</strong> <span id="modalLeaveReason"></span></p>
+                <p><strong>Status:</strong> <span id="modalLeaveStatus"></span></p>
+                <div class="form-group">
+                    <label for="approvalComment">Comments (Optional)</label>
+                    <textarea id="approvalComment" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="approveBtn" class="btn btn-primary">Approve</button>
+                <button id="rejectBtn" class="btn btn-danger">Reject</button>
+                <button id="cancelBtn" class="btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="/static/admin.js"></script>
+</body>
+</html>
