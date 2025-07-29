@@ -11,7 +11,7 @@ class RegistrationEvent(BaseModel):
     registration_status: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class LoginEvent(BaseModel):
     id: int
@@ -20,7 +20,7 @@ class LoginEvent(BaseModel):
     login_status: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ---------- User Schemas ----------
 
@@ -42,7 +42,7 @@ class EmployeeOut(BaseModel):
     role: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ---------- Attendance Schemas ----------
 
@@ -57,7 +57,7 @@ class AttendanceOut(BaseModel):
     out_time: Optional[datetime]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ---------- Leave Schemas ----------
 
@@ -74,7 +74,7 @@ class LeaveRequestOut(BaseModel):
     status: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ---------- Login Schema (optional) ----------
 
@@ -84,4 +84,4 @@ class LoginOut(BaseModel):
     login_status: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True

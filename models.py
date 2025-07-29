@@ -1,4 +1,3 @@
-# models.py
 from sqlalchemy import Column, Integer, String, DateTime, Date, Boolean, ForeignKey, func
 from sqlalchemy.orm import relationship
 from database import Base
@@ -72,6 +71,7 @@ class LeaveRequest(Base):
     reason = Column(String(255), nullable=False)
     status = Column(String(20), default="pending")  # 'pending', 'approved', 'rejected'
     approved_by = Column(Integer, ForeignKey("employees.id"), nullable=True)
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     employee = relationship("Employee", back_populates="leaves", 
                           foreign_keys=[employee_id])

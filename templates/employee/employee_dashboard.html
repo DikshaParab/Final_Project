@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Employee Dashboard{% endblock %}
+{% block content %}
+<header class="header">
+    <div class="page-title">
+        <h1>Employee Portal</h1>
+    </div>
+    <div class="header-actions">
+        <a href="/employee/apply-leave?employee_id={{ employee.id }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Apply Leave
+        </a>
+    </div>
+</header>
+
+<!-- Stats Cards -->
+<div class="card-grid">
+    <div class="card stat-card">
+        <i class="fas fa-calendar-check"></i>
+        <div class="stat-value">{{ attendance|length }}</div>
+        <div class="stat-label">Days Present</div>
+    </div>
+    <div class="card stat-card">
+        <i class="fas fa-calendar-minus"></i>
+        <div class="stat-value">{{ leaves|length }}</div>
+        <div class="stat-label">Leave Requests</div>
+    </div>
+</div>
+
+<!-- Leave Requests Table -->
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Recent Leave Requests</h2>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for leave in leaves %}
+                <tr>
+                    <td>{{ leave.start_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ leave.end_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ leave.reason }}</td>
+                    <td>
+                        <span class="status-badge status-{{ leave.status }}">
+                            {{ leave.status|title }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Include FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar');
+        let events = [];
+        try {
+            events = JSON.parse('{{ attendance_events | tojson | safe }}');
+        } catch (e) {
+            console.error("Error parsing attendance events:", e);
+        }
+        
+        events = events.map(ev => {
+            if (ev.title && !ev.color) {
+                if (ev.title.toLowerCase() === 'present') ev.color = '#10b981';
+                else if (ev.title.toLowerCase() === 'absent') ev.color = '#ef4444';
+                else if (ev.title.toLowerCase() === 'leave') ev.color = '#f59e42';
+            }
+            return ev;
+        });
+        
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: events,
+            eventDisplay: 'block',
+            height: 400
+        });
+        calendar.render();
+    });
+</script>
+{% endblock %}

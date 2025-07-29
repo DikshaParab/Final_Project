@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Employee Profile{% endblock %}
+{% block content %}
+<div class="profile-container">
+    <div class="card profile-card">
+        <div class="card-header">
+            <h2>Employee Profile</h2>
+        </div>
+        <div class="card-body">
+            <div class="avatar-container" style="text-align:center;">
+                <i class="fas fa-user-circle" style="font-size: 7rem; color: #adb5bd;"></i>
+            </div>
+            <table class="profile-table">
+                <tr>
+                    <th>Name:</th>
+                    <td>{{ employee.name }}</td>
+                </tr>
+                <tr>
+                    <th>Email:</th>
+                    <td>{{ employee.email }}</td>
+                </tr>
+                <tr>
+                    <th>Role:</th>
+                    <td>{% if employee.role %}Admin{% else %}Employee{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>ID:</th>
+                    <td>{{ employee.id }}</td>
+                </tr>
+            </table>
+            <div class="profile-actions">
+                <a href="/employee/dashboard?employee_id={{ employee.id }}" class="btn btn-thirdary " style="text-align: center;">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

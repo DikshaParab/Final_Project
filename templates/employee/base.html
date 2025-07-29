@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Employee Management System{% endblock %}</title>
+    <link rel="stylesheet" href="/static/employee.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Fixed Top Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="brand-logo">EMS</div>
+        </div>
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="ms-auto">
+            <button class="btn logout-btn">
+                <a href="/logout">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Fixed Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-profile">
+                    <div class="avatar">
+                        {% if employee.avatar %}
+                        <img src="{{ employee.avatar }}" alt="User Avatar">
+                        {% else %}
+                        <i class="fas fa-user-circle"></i>
+                        {% endif %}
+                    </div>
+                    <div class="user-info">
+                        <h3>{{ employee.name }}</h3>
+                        <p>{{ employee.email }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/employee/dashboard?employee_id={{ employee.id }}" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/employee/attendance?employee_id={{ employee.id }}" class="nav-link">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Attendance</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/employee/leaves?employee_id={{ employee.id }}" class="nav-link">
+                        <i class="fas fa-calendar-minus"></i>
+                        <span>Leave Requests</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/employee/profile?employee_id={{ employee.id }}" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    
+    {% block extra_scripts %}{% endblock %}
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Set active menu item based on current URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href').includes(currentPath.split('/')[2])) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

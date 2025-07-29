@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Leave History{% endblock %}
+{% block content %}
+<header class="header">
+    <div class="page-title">
+        <h1>Leave History</h1>
+    </div>
+    <div class="header-actions">
+        <a href="/employee/apply-leave?employee_id={{ employee.id }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Apply Leave
+        </a>
+    </div>
+</header>
+
+<div class="card">
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Leave Period</th>
+                    <th>Days</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for leave in leaves %}
+                <tr>
+                    <td>{{ leave.start_date.strftime('%Y-%m-%d') }} to {{ leave.end_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ (leave.end_date - leave.start_date).days + 1 }}</td>
+                    <td>{{ leave.reason }}</td>
+                    <td>
+                        <span class="status-badge status-{{ leave.status }}">
+                            {{ leave.status|title }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

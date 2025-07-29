@@ -1,125 +1,134 @@
+/* login.css */
 body {
     background: #f8fafb;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
-.form-container {
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.login-card {
     background: #fff;
-    max-width: 370px;
-    margin: 60px auto 0 auto;
     border-radius: 18px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-    padding: 2.5rem 3.5rem 2rem 2.2rem;
+    padding: 2.5rem;
     text-align: center;
-    position: relative;
 }
-.form-container h2 {
-    color: #2db36c;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
+
+.login-header {
+    margin-bottom: 2rem;
 }
-.form-container .icon-lock {
+
+.login-header i {
     font-size: 2.5rem;
     color: #2db36c;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
-.form-container label {
-    display: block;
+
+.login-header h2 {
+    color: #2db36c;
+    font-weight: 600;
+    margin: 0;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
     text-align: left;
-    margin-bottom: 0.2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
     color: #2db36c;
     font-weight: 500;
-    font-size: 1rem;
 }
-.form-container input[type="email"],
-.form-container input[type="password"] {
+
+.form-group input {
     width: 100%;
     padding: 0.7rem 0.9rem;
-    margin-bottom: 1.1rem;
     border: none;
     border-bottom: 2px solid #2db36c;
     background: transparent;
     font-size: 1rem;
     color: #222;
     outline: none;
-    transition: border 0.2s;
 }
-.form-container input[type="email"]:focus,
-.form-container input[type="password"]:focus {
-    border-bottom: 2px solid #1a8c4a;
+
+.password-input {
+    position: relative;
 }
-.form-container .remember-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.2rem;
-    font-size: 0.97rem;
-}
-.form-container .remember-row label {
-    margin: 0 0 0 0.3rem;
-    font-weight: 400;
+
+.password-input .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
     color: #2db36c;
 }
-.form-container .remember-row a {
-    color: #2db36c;
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
     text-decoration: none;
-    font-size: 0.97rem;
+    transition: all 0.3s ease;
 }
-.form-container .remember-row a:hover {
-    text-decoration: underline;
-}
-.form-container button[type="submit"] {
-    width: 100%;
+
+.btn-primary {
     background: #2db36c;
     color: #fff;
     border: none;
-    border-radius: 6px;
-    padding: 0.8rem 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 1.1rem;
+    width: 100%;
 }
-.form-container button[type="submit"]:hover {
+
+.btn-primary:hover {
     background: #1a8c4a;
 }
-.form-container .punch-row {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.5rem;
-}
-.form-container .punch-row button {
-    flex: 1;
+
+.btn-secondary {
     background: #fff;
     color: #2db36c;
     border: 2px solid #2db36c;
-    border-radius: 6px;
-    padding: 0.7rem 0;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
 }
-.form-container .punch-row button:hover {
+
+.btn-secondary:hover {
     background: #2db36c;
     color: #fff;
 }
-.form-container .register-prompt {
-    margin-top: 1.2rem;
-    font-size: 0.97rem;
+
+.punch-actions {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
 }
-.form-container .register-prompt a {
+
+.punch-actions .btn {
+    flex: 1;
+}
+
+.login-footer {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.login-footer a {
     color: #2db36c;
     text-decoration: none;
 }
-.form-container .register-prompt a:hover {
+
+.login-footer a:hover {
     text-decoration: underline;
-}
-.form-container .toggle-password {
-    position: absolute;
-    right: 2.5rem;
-    top: 8.7rem;
-    cursor: pointer;
-    color: #2db36c;
-    font-size: 1.1rem;
 }

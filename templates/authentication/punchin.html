@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Punch In{% endblock %}
+{% block content %}
+<div class="punch-container">
+    <div class="punch-card">
+        <div class="punch-header">
+            <i class="fas fa-fingerprint"></i>
+            <h2>Punch In</h2>
+        </div>
+        
+        {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if success %}
+        <div class="alert alert-success">
+            Successfully punched in at {{ current_time }}
+        </div>
+        {% endif %}
+        
+        <form action="/punch-in?employee_id={{ employee.id }}" method="POST">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ employee.email }}" readonly>
+            </div>
+            <button type="submit" class="btn btn-primary">Punch In</button>
+        </form>
+        
+        <div class="punch-footer">
+            <a href="/employee/dashboard?employee_id={{ employee.id }}" class="btn btn-secondary">
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

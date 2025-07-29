@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Requests</title>
+    <link rel ="stylesheet" href="{{ url_for('static', path='/admin.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <div class="brand-logo">EMS</div>
+            <div class="ms-auto">
+                <button class="btn btn-warning">
+                    <a href="/logout">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div class="sidebar">
+        <h5>Employee Management System</h5><br>
+        <a href="/dashboard?employee_id={{ employee.id }}">Dashboard</a>
+        <a href="/log-history?employee_id={{ employee.id }}">Log History</a>
+        <a href="/leave-requests?employee_id={{ employee.id }}" class="active">Leave Requests</a>
+        <a href="/add-employee?employee_id={{ employee.id }}">Add New Employee</a>
+        <a href="/employee/profile?employee_id={{ employee.id }}">Profile</a>
+    </div>
+    <main class="main-content">
+        <div class="container mt-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2>Pending Leave Requests</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Leave Period</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for leave in leaves %}
+                            <tr>
+                                <td>{{ leave.employee.name|capitalize if leave.employee else 'N/A' }}</td>
+                                <td>{{ leave.start_date.strftime('%d %b %Y') }} - {{ leave.end_date.strftime('%d %b %Y') }}</td>
+                                <td>{{ leave.reason }}</td>
+                                <td>
+                                    {% if leave.status == 'approved' %}
+                                        <span class="badge bg-success">Approved</span>
+                                    {% elif leave.status == 'rejected' %}
+                                        <span class="badge bg-danger">Rejected</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if leave.status == 'pending' %}
+                                        <form action="/dashboard/leave-action" method="post" style="display:inline;">
+                                            <input type="hidden" name="leave_id" value="{{ leave.id }}">
+                                            <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
+                                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                                        </form>
+                                    {% elif leave.status == 'approved' %}
+                                        <span class="text-success">Leave Approved</span>
+                                    {% elif leave.status == 'rejected' %}
+                                        <span class="text-danger">Leave Rejected</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="5" class="text-center">No pending leave requests.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

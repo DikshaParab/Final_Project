@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Apply Leave{% endblock %}
+{% block content %}
+<header class="header">
+    <div class="page-title">
+        <h1>Apply Leave</h1>
+    </div>
+</header>
+
+<div class="card">
+    <div class="card-body">
+        <form id="leaveForm" action="/employee/apply-leave?employee_id={{ employee.id }}" method="POST">
+            <div class="form-group">
+                <label for="start_date">Start Date</label>
+                <input type="date" id="start_date" name="start_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="end_date">End Date</label>
+                <input type="date" id="end_date" name="end_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="reason">Reason</label>
+                <textarea id="reason" name="reason" class="form-control" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Application</button>
+        </form>
+    </div>
+</div>
+
+{% if success %}
+<div class="modal-overlay active" id="successModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Application Submitted</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Your leave application has been submitted successfully.</p>
+            <p>You will be notified once it's reviewed by Admin.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="window.location.href='/employee/dashboard?employee_id={{ employee.id }}'">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Date validation
+        const startDate = document.getElementById('start_date');
+        const endDate = document.getElementById('end_date');
+        
+        // Set min date to today
+        const today = new Date().toISOString().split('T')[0];
+        startDate.min = today;
+        
+        startDate.addEventListener('change', function() {
+            endDate.min = this.value;
+        });
+
+        // Modal handling
+        const modal = document.getElementById('successModal');
+        if (modal) {
+            const closeBtn = modal.querySelector('.close');
+            closeBtn.onclick = function() {
+                modal.classList.remove('active');
+            }
+            
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.classList.remove('active');
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

@@ -27,26 +27,41 @@ def get_db():
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+    return templates.TemplateResponse("/authentication/login.html", {"request": request})
 
-@app.get("/register", response_class=HTMLResponse)
-def register_form(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
 
+# Only admin can add new employees via dashboard form
 @app.post("/register")
 def register(
     request: Request,
     name: str = Form(...),
     email: str = Form(...),
     password: str = Form(...),
-    repassword: str = Form(...),  
-    role: bool = Form(...),
+    role: str = Form(...),
+    employee_id: int = Form(...),
     db: Session = Depends(get_db)
 ):
+    admin = db.query(Employee).filter(Employee.id == employee_id).first()
+    if not admin or not admin.role:
+        return RedirectResponse("/", status_code=303)
     new_employee = auth.register_user(db, EmployeeCreate(
-        name=name, email=email, password=password, repassword=repassword, role=role
+        name=name, email=email, password=password, role=(role == "admin")
     ))
-    return RedirectResponse("/", status_code=303)
+    # After adding, stay on dashboard and show a success message
+    total_employees = db.query(Employee).count()
+    pending_leaves = db.query(LeaveRequest).filter(LeaveRequest.status == "pending").count()
+    leaves = db.query(LeaveRequest).filter(LeaveRequest.status == "pending").all()
+    all_leaves = db.query(LeaveRequest).all()
+    return templates.TemplateResponse("/admin/dashboard.html", {
+        "request": request,
+        "employee": admin,
+        "total_employees": total_employees,
+        "pending_leaves": pending_leaves,
+        "leaves": leaves,
+        "all_leaves": all_leaves,
+        "add_employee_success": True
+    })
+
 
 @app.post("/login")
 def login(
@@ -63,11 +78,11 @@ def login(
 
 @app.get("/punch-in", response_class=HTMLResponse)
 def punch_in_page(request: Request):
-    return templates.TemplateResponse("punchin.html", {"request": request})
+    return templates.TemplateResponse("/authentication/punchin.html", {"request": request})
 
 @app.get("/punch-out", response_class=HTMLResponse)
 def punch_out_page(request: Request):
-    return templates.TemplateResponse("punchout.html", {"request": request})
+    return templates.TemplateResponse("/authentication/punchout.html", {"request": request})
 
 @app.post("/punch-in")
 def punch_in(request: Request, email: str = Form(...), db: Session = Depends(get_db)):
@@ -100,12 +115,16 @@ def dashboard(request: Request, db: Session = Depends(get_db)):
 
     total_employees = db.query(Employee).count()
     pending_leaves = db.query(LeaveRequest).filter(LeaveRequest.status == "pending").count()
+    leaves = db.query(LeaveRequest).filter(LeaveRequest.status == "pending").all()
+    all_leaves = db.query(LeaveRequest).all()
 
-    return templates.TemplateResponse("dashboard.html", {
+    return templates.TemplateResponse("/admin/dashboard.html", {
         "request": request,
         "employee": employee,
         "total_employees": total_employees,
-        "pending_leaves": pending_leaves
+        "pending_leaves": pending_leaves,
+        "leaves": leaves,
+        "all_leaves": all_leaves
     })
 
 @app.get("/employee/dashboard", response_class=HTMLResponse)
@@ -119,7 +138,7 @@ def employee_dashboard(request: Request, db: Session = Depends(get_db)):
     leaves = db.query(LeaveRequest).filter(LeaveRequest.employee_id == employee_id).all()
     attendance_events = [{"title": "Present", "start": record.date.strftime("%Y-%m-%d")} for record in attendance if record.date]
 
-    return templates.TemplateResponse("employee_dashboard.html", {
+    return templates.TemplateResponse("/employee/employee_dashboard.html", {
         "request": request,
         "employee": employee,
         "leaves": leaves,
@@ -132,7 +151,7 @@ def apply_leave_form(request: Request, db: Session = Depends(get_db)):
     employee = db.query(Employee).filter(Employee.id == employee_id).first()
     if not employee or employee.role:
         return RedirectResponse("/", status_code=303)
-    return templates.TemplateResponse("leave_modal.html", {"request": request, "employee": employee})
+    return templates.TemplateResponse("/employee/leave_modal.html", {"request": request, "employee": employee})
 
 @app.post("/employee/apply-leave")
 def submit_leave(
@@ -147,20 +166,20 @@ def submit_leave(
     start_dt = datetime.strptime(start_date, "%Y-%m-%d")
     end_dt = datetime.strptime(end_date, "%Y-%m-%d")
     if start_dt > end_dt:
-        return templates.TemplateResponse("leave_modal.html", {"request": request, "employee": employee, "error": "Start date after end date."})
+        return templates.TemplateResponse("/employee/leave_modal.html", {"request": request, "employee": employee, "error": "Start date after end date."})
 
     # Check overlaps
     existing = db.query(LeaveRequest).filter(LeaveRequest.employee_id == employee_id, LeaveRequest.status.in_(["pending", "approved"])).all()
     for leave in existing:
         if start_dt <= leave.end_date and end_dt >= leave.start_date:
-            return templates.TemplateResponse("leave_modal.html", {"request": request, "employee": employee, "error": "Date overlap with existing leave."})
+            return templates.TemplateResponse("/employee/leave_modal.html", {"request": request, "employee": employee, "error": "Date overlap with existing leave."})
 
     attendance = db.query(Attendance).filter(Attendance.employee_id == employee_id).all()
     present_days = {a.date.strftime("%Y-%m-%d") for a in attendance if a.date}
     check_date = start_dt
     while check_date <= end_dt:
         if check_date.strftime("%Y-%m-%d") in present_days:
-            return templates.TemplateResponse("leave_modal.html", {"request": request, "employee": employee, "error": f"Attendance exists on {check_date}"})
+            return templates.TemplateResponse("/employee/leave_modal.html", {"request": request, "employee": employee, "error": f"Attendance exists on {check_date}"})
         check_date += timedelta(days=1)
 
     db.add(LeaveRequest(
@@ -171,27 +190,27 @@ def submit_leave(
         status="pending"
     ))
     db.commit()
-    return templates.TemplateResponse("leave_modal.html", {"request": request, "employee": employee, "success": True})
+    return templates.TemplateResponse("/employee/leave_modal.html", {"request": request, "employee": employee, "success": True})
 
 @app.get("/employee/attendance", response_class=HTMLResponse)
 def employee_attendance(request: Request, db: Session = Depends(get_db)):
     employee_id = int(request.query_params.get("employee_id"))
     employee = db.query(Employee).filter(Employee.id == employee_id).first()
     attendance = db.query(Attendance).filter(Attendance.employee_id == employee_id).all()
-    return templates.TemplateResponse("employee_attendance.html", {"request": request, "employee": employee, "attendance": attendance})
+    return templates.TemplateResponse("/employee/employee_attendance.html", {"request": request, "employee": employee, "attendance": attendance})
 
 @app.get("/employee/leaves", response_class=HTMLResponse)
 def employee_leaves(request: Request, db: Session = Depends(get_db)):
     employee_id = int(request.query_params.get("employee_id"))
     employee = db.query(Employee).filter(Employee.id == employee_id).first()
     leaves = db.query(LeaveRequest).filter(LeaveRequest.employee_id == employee_id).all()
-    return templates.TemplateResponse("employee_leaves.html", {"request": request, "employee": employee, "leaves": leaves})
+    return templates.TemplateResponse("/employee/employee_leaves.html", {"request": request, "employee": employee, "leaves": leaves})
 
 @app.get("/employee/profile", response_class=HTMLResponse)
 def employee_profile(request: Request, db: Session = Depends(get_db)):
     employee_id = int(request.query_params.get("employee_id"))
     employee = db.query(Employee).filter(Employee.id == employee_id).first()
-    return templates.TemplateResponse("employee_profile.html", {"request": request, "employee": employee})
+    return templates.TemplateResponse("/employee/employee_profile.html", {"request": request, "employee": employee})
 
 @app.get("/logout")
 def logout():
