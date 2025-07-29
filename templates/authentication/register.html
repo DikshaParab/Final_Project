@@ -1,81 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="/static/login.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register</title>
+  <link rel="stylesheet" href="/static/register.css">
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-card">
-            <div class="login-header">
-                <i class="fas fa-user-plus"></i>
-                <h2>Create Account</h2>
-            </div>
-            
-            {% if error %}
-            <div class="alert alert-danger">
-                {{ error }}
-            </div>
-            {% endif %}
-            
-            <form action="/register" method="POST">
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="password-input">
-                        <input type="password" id="password" name="password" required>
-                        <i class="fas fa-eye toggle-password"></i>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="repassword">Confirm Password</label>
-                    <div class="password-input">
-                        <input type="password" id="repassword" name="repassword" required>
-                        <i class="fas fa-eye toggle-password"></i>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Role</label>
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" name="role" value="1" required>
-                            <span>Admin</span>
-                        </label>
-                        <label>
-                            <input type="radio" name="role" value="0" required checked>
-                            <span>Employee</span>
-                        </label>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Register</button>
-            </form>
-            
-            <div class="login-footer">
-                <p>Already have an account? <a href="/">Login here</a></p>
-            </div>
-        </div>
+  <div class="form-container" style="max-width: 320px; width: 100%; min-width: 0; padding: 2rem 1rem; overflow-x: hidden;">
+    <div style="display:flex;justify-content:center;align-items:center;margin-bottom:1.2em;">
+      <i class="fas fa-user-circle" style="font-size:3.2rem;color:#3a86ff;"></i>
     </div>
+    <h2>Create Your Profile</h2>
+    <form action="/register" method="POST" autocomplete="off">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required />
 
-    <script>
-        // Toggle password visibility
-        document.querySelectorAll('.toggle-password').forEach(icon => {
-            icon.addEventListener('click', function() {
-                const input = this.parentElement.querySelector('input');
-                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                input.setAttribute('type', type);
-                this.classList.toggle('fa-eye-slash');
-            });
-        });
-    </script>
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required />
+
+      <label for="repassword">Re-enter Password</label>
+      <input type="password" id="repassword" name="repassword" required />
+
+
+      <input type="hidden" name="role" value="1" />
+      <div class="radio-group">
+        <label><input type="radio" name="role" value="1" checked disabled /> Admin</label>
+      </div>
+      <div class="form-info" style="color:#888; font-size:0.95em; margin-bottom:1em;">
+        Only admin registration is allowed.
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+    <p class="login-prompt">
+      Already have an account? <a href="/">Login here</a>
+    </p>
+  </div>
 </body>
 </html>

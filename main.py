@@ -29,6 +29,10 @@ def get_db():
 def home(request: Request):
     return templates.TemplateResponse("/authentication/login.html", {"request": request})
 
+@app.get("/register", response_class=HTMLResponse)
+def register_page(request: Request):
+    return templates.TemplateResponse("/authentication/register.html", {"request": request})
+
 # Only admin can add new employees via dashboard form
 @app.post("/register")
 def register(
